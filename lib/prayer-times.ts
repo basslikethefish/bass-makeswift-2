@@ -1,16 +1,25 @@
 const ISLAMICFINDER_URL =
   'https://www.islamicfinder.org/prayer-times/?country=US&state=Georgia&city=Dalton&lat=34.7698&lng=-84.9702&timezone=America%2FNew_York'
 
-const FALLBACK =
-  'Prayer times unavailable. Please visit islamicfinder.org or contact the masjid directly.'
-
 const PRAYER_NAMES = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const
 
-let cache: { date: string; times: string } | null = null
+export type PrayerName = (typeof PRAYER_NAMES)[number]
 
-function parsePrayerTimes(html: string): string | null {
+export interface PrayerTime {
+  name: PrayerName
+  time: string
+}
+
+interface CacheEntry {
+  date: string
+  prayers: PrayerTime[] | null
+}
+
+let cache: CacheEntry | null = null
+
+function parsePrayerTimes(html: string): PrayerTime[] | null {
   try {
-    const times: string[] = []
+    const prayers: PrayerTime[] = []
 
     for (const name of PRAYER_NAMES) {
       const namePattern = new RegExp(
@@ -19,17 +28,17 @@ function parsePrayerTimes(html: string): string | null {
       )
       const match = html.match(namePattern)
       if (match?.[1]) {
-        times.push(`- ${name}: ${match[1].trim()}`)
+        prayers.push({ name, time: match[1].trim() })
       }
     }
 
-    return times.length === PRAYER_NAMES.length ? times.join('\n') : null
+    return prayers.length === PRAYER_NAMES.length ? prayers : null
   } catch {
     return null
   }
 }
 
-async function fetchFromSource(): Promise<string> {
+async function fetchFromSource(): Promise<PrayerTime[] | null> {
   try {
     const res = await fetch(ISLAMICFINDER_URL, {
       headers: {
@@ -39,24 +48,34 @@ async function fetchFromSource(): Promise<string> {
       },
     })
 
-    if (!res.ok) return FALLBACK
+    if (!res.ok) return null
 
     const html = await res.text()
-    return parsePrayerTimes(html) ?? FALLBACK
+    return parsePrayerTimes(html)
   } catch {
-    return FALLBACK
+    return null
   }
 }
 
-export async function getPrayerTimes(): Promise<string> {
+export async function getPrayerTimesStructured(): Promise<PrayerTime[] | null> {
   const today = new Date().toDateString()
 
   if (cache && cache.date === today) {
-    return cache.times
+    return cache.prayers
   }
 
-  const times = await fetchFromSource()
-  cache = { date: today, times }
+  const prayers = await fetchFromSource()
+  cache = { date: today, prayers }
 
-  return times
+  return prayers
+}
+
+export async function getPrayerTimes(): Promise<string> {
+  const prayers = await getPrayerTimesStructured()
+
+  if (!prayers) {
+    return 'Prayer times unavailable. Please visit islamicfinder.org or contact the masjid directly.'
+  }
+
+  return prayers.map((p) => `- ${p.name}: ${p.time}`).join('\n')
 }
