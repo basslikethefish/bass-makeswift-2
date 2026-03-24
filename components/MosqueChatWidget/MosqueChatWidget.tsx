@@ -160,12 +160,12 @@ export function MosqueChatWidget({
           {/* Header */}
           <div
             className="flex items-center justify-between px-5 py-4"
-            style={{ background: '#008CAC' }}
+            style={{ background: '#C7B299' }}
           >
             <div className="flex items-center gap-3">
               <div
                 className="flex h-9 w-9 items-center justify-center rounded-full text-white text-lg"
-                style={{ background: '#C7B299' }}
+                style={{ background: '#008CAC' }}
               >
                 🕌
               </div>
@@ -206,7 +206,7 @@ export function MosqueChatWidget({
                       ? 'text-white'
                       : 'bg-white text-gray-800 shadow-sm border border-gray-100'
                   }`}
-                  style={msg.role === 'user' ? { background: '#008CAC' } : undefined}
+                  style={msg.role === 'user' ? { background: '#C7B299' } : undefined}
                 >
                   {formatContent(msg.content)}
                 </div>
@@ -233,14 +233,14 @@ export function MosqueChatWidget({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#008CAC] focus:ring-1 focus:ring-[#008CAC] transition-colors"
+              className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#C7B299] focus:ring-1 focus:ring-[#C7B299] transition-colors"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
               className="flex h-10 w-10 items-center justify-center rounded-full text-white transition-opacity disabled:opacity-40"
-              style={{ background: '#008CAC' }}
+              style={{ background: '#C7B299' }}
               aria-label="Send message"
             >
               <SendIcon />
@@ -253,7 +253,7 @@ export function MosqueChatWidget({
       <button
         onClick={() => setOpen(!open)}
         className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-        style={{ background: '#008CAC' }}
+        style={{ background: '#C7B299' }}
         aria-label={open ? 'Close chat' : 'Open chat'}
       >
         {open ? <CloseIcon /> : <ChatIcon />}
