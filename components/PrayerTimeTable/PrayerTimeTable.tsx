@@ -8,22 +8,17 @@ interface PrayerTime {
   time: string
 }
 
-interface ImageWithDimensions {
-  url: string
-  dimensions: { width: number; height: number }
-}
-
 interface PrayerTimeTableProps {
   className?: string
   title?: string
-  backgroundImage?: ImageWithDimensions
+  backgroundImage?: string
   overlayColor?: string
   overlayOpacity?: number
   headingColor?: string
   textColor?: string
   borderColor?: string
   dividerColor?: string
-  decorImage?: ImageWithDimensions
+  decorImage?: string
 }
 
 function fetchPrayerTimes(): Promise<PrayerTime[] | null> {
@@ -105,20 +100,13 @@ export function PrayerTimeTable({
         }}
       >
         {/* Background image layer */}
-        {backgroundImage?.url && (
+        {backgroundImage && (
           <Image
-            src={backgroundImage.url}
+            src={backgroundImage}
             alt=""
-            width={backgroundImage.dimensions.width}
-            height={backgroundImage.dimensions.height}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-            }}
+            fill
+            sizes="400px"
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
           />
         )}
 
@@ -161,13 +149,12 @@ export function PrayerTimeTable({
           </p>
 
           {/* Decorative icon */}
-          {decorImage?.url && (
+          {decorImage && (
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-              <Image
-                src={decorImage.url}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={decorImage}
                 alt=""
-                width={decorImage.dimensions.width}
-                height={decorImage.dimensions.height}
                 style={{ width: 40, height: 40, objectFit: 'contain' }}
               />
             </div>
