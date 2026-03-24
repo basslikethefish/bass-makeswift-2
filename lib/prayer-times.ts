@@ -1,5 +1,5 @@
-const ISLAMICFINDER_URL =
-  'https://www.islamicfinder.org/prayer-times/?country=US&state=Georgia&city=Dalton&lat=34.7698&lng=-84.9702&timezone=America%2FNew_York'
+const ALADHAN_URL =
+  'https://api.aladhan.com/v1/timings?latitude=34.7698&longitude=-84.9702&method=4&school=0'
 
 const PRAYER_NAMES = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const
 
@@ -17,41 +17,35 @@ interface CacheEntry {
 
 let cache: CacheEntry | null = null
 
-function parsePrayerTimes(html: string): PrayerTime[] | null {
-  try {
-    const prayers: PrayerTime[] = []
-
-    for (const name of PRAYER_NAMES) {
-      const namePattern = new RegExp(
-        `${name}[\\s\\S]{0,500}?(\\d{1,2}:\\d{2}\\s*[APap][Mm])`,
-        'i'
-      )
-      const match = html.match(namePattern)
-      if (match?.[1]) {
-        prayers.push({ name, time: match[1].trim() })
-      }
-    }
-
-    return prayers.length === PRAYER_NAMES.length ? prayers : null
-  } catch {
-    return null
-  }
+function to12Hour(time24: string): string {
+  const [hourStr, minuteStr] = time24.split(':')
+  let hour = parseInt(hourStr, 10)
+  const minute = minuteStr.replace(/\s*\(.*\)/, '')
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  if (hour === 0) hour = 12
+  else if (hour > 12) hour -= 12
+  return `${hour}:${minute} ${ampm}`
 }
 
-async function fetchFromSource(): Promise<PrayerTime[] | null> {
+async function fetchFromAladhan(): Promise<PrayerTime[] | null> {
   try {
-    const res = await fetch(ISLAMICFINDER_URL, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        Accept: 'text/html',
-      },
-    })
+    const res = await fetch(ALADHAN_URL, { redirect: 'follow' })
 
     if (!res.ok) return null
 
-    const html = await res.text()
-    return parsePrayerTimes(html)
+    const data = await res.json()
+    const timings = data?.data?.timings
+
+    if (!timings) return null
+
+    const prayers: PrayerTime[] = []
+    for (const name of PRAYER_NAMES) {
+      const raw = timings[name]
+      if (!raw) return null
+      prayers.push({ name, time: to12Hour(raw) })
+    }
+
+    return prayers
   } catch {
     return null
   }
@@ -64,7 +58,7 @@ export async function getPrayerTimesStructured(): Promise<PrayerTime[] | null> {
     return cache.prayers
   }
 
-  const prayers = await fetchFromSource()
+  const prayers = await fetchFromAladhan()
   cache = { date: today, prayers }
 
   return prayers
