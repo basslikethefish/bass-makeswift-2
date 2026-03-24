@@ -8,6 +8,7 @@ interface ProfilePhotoProps {
   size?: number
   borderWidth?: number
   borderColor?: string
+  cropY?: number
 }
 
 export function ProfilePhoto({
@@ -16,6 +17,7 @@ export function ProfilePhoto({
   size = 150,
   borderWidth = 0,
   borderColor = 'transparent',
+  cropY = 20,
 }: ProfilePhotoProps) {
   const outerSize = size + borderWidth * 2
 
@@ -31,36 +33,35 @@ export function ProfilePhoto({
         flexShrink: 0,
       }}
     >
-      {image?.url ? (
-        <Image
-          src={image.url}
-          alt=""
-          width={size}
-          height={size}
-          style={{
-            width: size,
-            height: size,
-            objectFit: 'cover',
-            objectPosition: 'center',
-            display: 'block',
-          }}
-        />
-      ) : (
-        <div
-          style={{
-            width: size,
-            height: size,
-            backgroundColor: '#e5e7eb',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: size * 0.35,
-            color: '#9ca3af',
-          }}
-        >
-          👤
-        </div>
-      )}
+      <div style={{ position: 'relative', width: size, height: size }}>
+        {image?.url ? (
+          <Image
+            src={image.url}
+            alt=""
+            fill
+            sizes={`${size}px`}
+            style={{
+              objectFit: 'cover',
+              objectPosition: `center ${cropY}%`,
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: size,
+              height: size,
+              backgroundColor: '#e5e7eb',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: size * 0.35,
+              color: '#9ca3af',
+            }}
+          >
+            👤
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -15,6 +15,7 @@ runtime.registerComponent(
       size: Number({ label: 'Size', defaultValue: 150, suffix: 'px', min: 40, max: 500 }),
       borderWidth: Number({ label: 'Border thickness', defaultValue: 0, suffix: 'px', min: 0, max: 20 }),
       borderColor: Color({ label: 'Border color', defaultValue: '#C7B299' }),
+      cropY: Number({ label: 'Vertical crop position', defaultValue: 20, suffix: '%', min: 0, max: 100 }),
     },
   }
 )
