@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-import { Color, Image, Number, Select, Style } from '@makeswift/runtime/controls'
+import { Color, Image, Number, Style } from '@makeswift/runtime/controls'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
@@ -15,15 +15,7 @@ runtime.registerComponent(
       size: Number({ label: 'Size', defaultValue: 150, suffix: 'px', min: 40, max: 500 }),
       borderWidth: Number({ label: 'Border thickness', defaultValue: 0, suffix: 'px', min: 0, max: 20 }),
       borderColor: Color({ label: 'Border color', defaultValue: '#C7B299' }),
-      cropPosition: Select({
-        label: 'Crop position',
-        options: [
-          { value: 'top', label: 'Top (faces)' },
-          { value: 'center', label: 'Center' },
-          { value: 'bottom', label: 'Bottom' },
-        ],
-        defaultValue: 'top',
-      }),
+      cropY: Number({ label: 'Vertical crop position', defaultValue: 20, suffix: '%', min: 0, max: 100 }),
     },
   }
 )
