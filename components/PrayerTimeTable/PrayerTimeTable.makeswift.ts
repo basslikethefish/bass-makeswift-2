@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-import { Color, Style, TextInput } from '@makeswift/runtime/controls'
+import { Color, Image, Number, Style, TextInput } from '@makeswift/runtime/controls'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
@@ -12,12 +12,14 @@ runtime.registerComponent(
     props: {
       className: Style({ properties: [Style.Margin, Style.Width] }),
       title: TextInput({ label: 'Title', defaultValue: "Today's Prayer Times" }),
-      cardBackground: Color({ label: 'Card background', defaultValue: '#C7B299' }),
+      backgroundImage: Image({ label: 'Card background image', format: Image.Format.WithDimensions }),
+      overlayColor: Color({ label: 'Overlay color', defaultValue: '#C7B299' }),
+      overlayOpacity: Number({ label: 'Overlay opacity', defaultValue: 80, suffix: '%', min: 0, max: 100 }),
       headingColor: Color({ label: 'Heading / time color', defaultValue: '#008CAC' }),
       textColor: Color({ label: 'Label color', defaultValue: '#008CAC' }),
-      accentColor: Color({ label: 'Accent (star / default divider)', defaultValue: '#008CAC' }),
       borderColor: Color({ label: 'Border color', defaultValue: '#008CAC' }),
-      dividerColor: Color({ label: 'Divider color (overrides accent)' }),
+      dividerColor: Color({ label: 'Divider color' }),
+      decorImage: Image({ label: 'Decorative icon', format: Image.Format.WithDimensions }),
     },
   }
 )
