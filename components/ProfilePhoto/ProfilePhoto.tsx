@@ -8,6 +8,7 @@ interface ProfilePhotoProps {
   size?: number
   borderWidth?: number
   borderColor?: string
+  cropPosition?: 'top' | 'center' | 'bottom'
 }
 
 export function ProfilePhoto({
@@ -16,6 +17,7 @@ export function ProfilePhoto({
   size = 150,
   borderWidth = 0,
   borderColor = 'transparent',
+  cropPosition = 'top',
 }: ProfilePhotoProps) {
   const outerSize = size + borderWidth * 2
 
@@ -41,7 +43,7 @@ export function ProfilePhoto({
             width: size,
             height: size,
             objectFit: 'cover',
-            objectPosition: 'center',
+            objectPosition: `center ${cropPosition}`,
             display: 'block',
           }}
         />
