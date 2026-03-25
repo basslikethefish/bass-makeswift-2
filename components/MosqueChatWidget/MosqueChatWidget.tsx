@@ -154,12 +154,12 @@ export function MosqueChatWidget({
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-[9999] flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 z-[9999] flex flex-col items-end sm:bottom-5 sm:right-5">
       {open && (
-        <div className="mb-3 flex h-[520px] w-[380px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-200">
+        <div className="mb-3 flex flex-col overflow-hidden bg-white shadow-2xl border border-gray-200 fixed inset-3 rounded-2xl sm:static sm:inset-auto sm:h-[520px] sm:w-[380px] sm:rounded-2xl">
           {/* Header */}
           <div
-            className="flex items-center justify-between px-5 py-4"
+            className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4"
             style={{ background: '#C7B299' }}
           >
             <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ export function MosqueChatWidget({
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="rounded-full p-1.5 text-white/80 hover:bg-white/20 hover:text-white transition-colors"
+              className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors"
               aria-label="Close chat"
             >
               <CloseIcon />
@@ -184,7 +184,7 @@ export function MosqueChatWidget({
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-gray-50">
+          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gray-50 sm:px-4 sm:py-4">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center px-4">
                 <div className="text-4xl mb-3">🕌</div>
@@ -201,7 +201,7 @@ export function MosqueChatWidget({
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     msg.role === 'user'
                       ? 'text-white'
                       : 'bg-white text-gray-800 shadow-sm border border-gray-100'
@@ -225,7 +225,7 @@ export function MosqueChatWidget({
           {/* Input */}
           <form
             onSubmit={sendMessage}
-            className="flex items-center gap-2 border-t border-gray-200 bg-white px-4 py-3"
+            className="flex items-center gap-2 border-t border-gray-200 bg-white px-3 py-2.5 sm:px-4 sm:py-3 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] sm:pb-3"
           >
             <input
               ref={inputRef}
@@ -233,13 +233,13 @@ export function MosqueChatWidget({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#C7B299] focus:ring-1 focus:ring-[#C7B299] transition-colors"
+              className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-base sm:text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#C7B299] focus:ring-1 focus:ring-[#C7B299] transition-colors"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-white transition-opacity disabled:opacity-40"
+              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-white transition-opacity disabled:opacity-40"
               style={{ background: '#C7B299' }}
               aria-label="Send message"
             >
@@ -252,7 +252,7 @@ export function MosqueChatWidget({
       {/* Toggle button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+        className={`flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 ${open ? 'hidden sm:flex' : ''}`}
         style={{ background: '#C7B299' }}
         aria-label={open ? 'Close chat' : 'Open chat'}
       >
