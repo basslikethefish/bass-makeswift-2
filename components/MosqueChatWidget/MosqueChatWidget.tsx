@@ -9,6 +9,7 @@ interface MosqueChatWidgetProps {
   tuition: string
   sisMohaContact: string
   facebookUrl: string
+  additionalInfo: string
 }
 
 interface Message {
@@ -72,11 +73,35 @@ function TypingIndicator() {
   )
 }
 
+const URL_SPLIT = /(https?:\/\/[^\s),]+)/g
+const URL_TEST = /^https?:\/\//
+
+function linkify(line: string) {
+  const parts = line.split(URL_SPLIT)
+  return parts.map((part, j) =>
+    URL_TEST.test(part) ? (
+      <a
+        key={j}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline break-all"
+        style={{ color: 'inherit' }}
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  )
+}
+
 function formatContent(text: string) {
-  return text.split('\n').map((line, i) => (
+  const lines = text.split('\n')
+  return lines.map((line, i) => (
     <span key={i}>
-      {line}
-      {i < text.split('\n').length - 1 && <br />}
+      {linkify(line)}
+      {i < lines.length - 1 && <br />}
     </span>
   ))
 }
@@ -88,6 +113,7 @@ export function MosqueChatWidget({
   tuition,
   sisMohaContact,
   facebookUrl,
+  additionalInfo,
 }: MosqueChatWidgetProps) {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
@@ -132,6 +158,7 @@ export function MosqueChatWidget({
           tuition,
           sisMohaContact,
           facebookUrl,
+          additionalInfo,
         },
       })
 
@@ -156,7 +183,7 @@ export function MosqueChatWidget({
   return (
     <div className="fixed bottom-4 right-4 z-[9999] flex flex-col items-end sm:bottom-5 sm:right-5">
       {open && (
-        <div className="mb-3 flex flex-col overflow-hidden bg-white shadow-2xl border border-gray-200 fixed inset-3 rounded-2xl sm:static sm:inset-auto sm:h-[520px] sm:w-[380px] sm:rounded-2xl">
+        <div className="mb-3 flex flex-col overflow-hidden bg-white shadow-2xl border border-gray-200 rounded-2xl w-[calc(100vw-2rem)] max-w-[380px] h-[60vh] max-h-[28rem] sm:h-[520px] sm:max-h-none">
           {/* Header */}
           <div
             className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4"
@@ -201,7 +228,7 @@ export function MosqueChatWidget({
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words overflow-hidden ${
                     msg.role === 'user'
                       ? 'text-white'
                       : 'bg-white text-gray-800 shadow-sm border border-gray-100'
@@ -252,7 +279,7 @@ export function MosqueChatWidget({
       {/* Toggle button */}
       <button
         onClick={() => setOpen(!open)}
-        className={`flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 ${open ? 'hidden sm:flex' : ''}`}
+        className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
         style={{ background: '#C7B299' }}
         aria-label={open ? 'Close chat' : 'Open chat'}
       >

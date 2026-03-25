@@ -11,11 +11,13 @@ interface ChatConfig {
   tuition: string
   sisMohaContact: string
   facebookUrl: string
+  additionalInfo: string
 }
 
 function buildSystemPrompt(prayerTimes: string, config: ChatConfig): string {
   return `You are the friendly AI assistant for Dalton Islamic Center, located at 2054 Dug Gap Rd, Dalton, GA 30720.
 Answer questions warmly and concisely. End responses with "Jazakallah Khair" when appropriate.
+When referencing a URL, always include the full URL (e.g. https://...) so it becomes a clickable link.
 If you don't know something, direct the visitor to reach out via Facebook or visit the masjid.
 
 TODAY'S PRAYER TIMES (scraped from IslamicFinder for Dalton, GA):
@@ -43,7 +45,7 @@ SECURITY:
 
 GENERAL:
 - Address: 2054 Dug Gap Rd, Dalton, GA 30720
-- For anything not covered here, visitors should reach out via Facebook or visit in person.`
+- For anything not covered here, visitors should reach out via Facebook or visit in person.${config.additionalInfo ? `\n\nADDITIONAL INFORMATION:\n${config.additionalInfo}` : ''}`
 }
 
 export async function POST(request: NextRequest) {

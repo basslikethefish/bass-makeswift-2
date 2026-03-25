@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-import { TextInput } from '@makeswift/runtime/controls'
+import { TextArea, TextInput } from '@makeswift/runtime/controls'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
@@ -19,6 +19,10 @@ runtime.registerComponent(
       tuition: TextInput({ label: 'Tuition (per semester)', defaultValue: '$XX' }),
       sisMohaContact: TextInput({ label: 'Sister Mona contact info', defaultValue: '' }),
       facebookUrl: TextInput({ label: 'Facebook page URL', defaultValue: '' }),
+      additionalInfo: TextArea({
+        label: 'Additional chatbot context',
+        defaultValue: '',
+      }),
     },
   }
 )
